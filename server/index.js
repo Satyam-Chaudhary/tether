@@ -22,9 +22,9 @@ app.use(express.json()); // for parsing application/json
 
 app.use("/api/auth", authRoutes)
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello World!");
+// });
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

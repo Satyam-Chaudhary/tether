@@ -15,12 +15,16 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 export default function Auth() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { setUserInfo } = useAppStore();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -62,11 +66,15 @@ export default function Auth() {
         { withCredentials: true } // This is important for cookies to be set
       );
       if (response.status === 200) {
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        toast.success("Logged In");
-        console.log(response);
+        if (response.data.user.id) {
+          setUserInfo(response.data.user);
+          console.log(response);
+          if (response.data.user.profileSetup) {
+            navigate("/chat");
+          } else {
+            navigate("/profile");
+          }
+        }
       }
     }
   };
@@ -80,9 +88,11 @@ export default function Auth() {
         { withCredentials: true }
       );
       if (response.status === 201) {
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
+        setUserInfo(response.data.user);
+        navigate("/");
+        // setEmail("");
+        // setPassword("");
+        // setConfirmPassword("");
         toast.success("Sign up successful!");
         console.log(response);
       }
