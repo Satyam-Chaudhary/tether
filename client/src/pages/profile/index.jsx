@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
@@ -20,6 +20,10 @@ const Profile = () => {
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState(null);
   const [selectedColor, setSelectedColor] = useState(colorOptions[0].value);
+
+  useEffect(() => {
+
+  }, [userInfo]);
 
   const getInitials = () => {
     if (firstName) {

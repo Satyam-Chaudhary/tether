@@ -19,7 +19,8 @@ const Chat = () => {
 
   return (
     <div>
-      Chat
+      Chat: {userInfo.firstName}
+      {console.log(userInfo)}
     </div>
   )
 }
