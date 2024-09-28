@@ -5,6 +5,12 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  safelist: [
+    {
+      pattern: /(shadow|lg:shadow)-(sky|emerald|rose|amber)-500\/30/,
+    },
+  ]
+  ,
   theme: {
   	extend: {
   		borderRadius: {

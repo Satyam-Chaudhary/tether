@@ -12,4 +12,10 @@ export const colorOptions = [
   { name: 'Amber', value: 'bg-amber-500' },
 ];
 
+export const getShadowClass = (bgColor) => {
+  if (!bgColor) return 'shadow-gray-500/50'; // Default shadow
+
+  return `${bgColor.replace('bg-', 'shadow-')}/30`;
+};
+
 

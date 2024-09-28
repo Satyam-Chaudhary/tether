@@ -82,19 +82,28 @@ export default function Auth() {
   const handleSignup = async () => {
     if (validateSignUp()) {
       // alert("Done");
-      const response = await apiClient.post(
-        SIGNUP_ROUTE,
-        { email, password },
-        { withCredentials: true }
-      );
-      if (response.status === 201) {
-        setUserInfo(response.data.user);
-        navigate("/");
-        // setEmail("");
-        // setPassword("");
-        // setConfirmPassword("");
-        toast.success("Sign up successful!");
-        console.log(response);
+      try {
+        const response = await apiClient.post(
+          SIGNUP_ROUTE,
+          { email, password },
+          { withCredentials: true }
+        );
+        if (response.status === 201) {
+          setUserInfo(response.data.user);
+          navigate("/");
+          // setEmail("");
+          // setPassword("");
+          // setConfirmPassword("");
+          toast.success("Sign up successful!");
+          console.log(response);
+        }
+      } catch (err) {
+        if (err.response.status === 409) {
+          toast.error("User already exists");
+        } else {
+          console.error("Signup Error: ", err);
+          toast.error("Signup failed. Please try again.");
+        }
       }
     }
   };

@@ -1,6 +1,7 @@
 import { compare } from "bcrypt";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
+import {renameSync, unlinkSync} from "fs";
 
 const maxAge = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
 
@@ -18,6 +19,12 @@ export const signUp = async (req, res, next) => {
         .status(400)
         .json({ message: "Please provide email and password" });
     }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
     const user = await User.create({ email, password });
     res.cookie("jwt", createToken(email, user.id), {
       httpOnly: true,
@@ -142,4 +149,49 @@ export const updateProfile = async (req, res, next) => {
     console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
+};
+
+
+export const addProfileImage = async (req, res, next) => {
+  try {
+    const { userId } = req;
+    if(!req.file) { // if no file is uploaded 
+      return res.status(400).send('Please upload an image file');
+    }
+    //console.log(req.file.path);
+    const date = Date.now();
+    let fileName = "uploads/profiles/" + date + req.file.originalname;
+    renameSync(req.file.path, fileName);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {image: fileName},
+      {new: true, runValidators: true}
+    );
+
+    return res.status(200).json({
+      user:{
+        image: updatedUser.image
+      }
+    })
+  } catch (error) {
+    console.log({ error });
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const removeProfileImage = async (req, res, next) => {
+  const {userId} = req;
+  const user  = await User.findById(userId);
+
+  if(!user.image){
+    return res.status(400).send('No image to delete');
+  }
+
+  unlinkSync(user.image);
+  user.image = null;
+
+  await user.save(); // save the updated user
+
+  return res.status(200).send('Image deleted successfully');
 };
