@@ -6,6 +6,8 @@ import { useAppStore } from "./store";
 import { useEffect, useState } from "react";
 import { apiClient } from "./lib/api-client";
 import { GET_USER_INFO } from "./utils/constants";
+import Lottie from "lottie-react";
+import animationData from '@/assets/lottieAnimations/loader2.json';
 
 // PrivateRoute component that will only render its children if the user is authenticated
 const PrivateRoute = ({ children }) => {
@@ -42,21 +44,36 @@ function App() {
         setUserInfo(undefined);
         console.log({ error });
       }finally{
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       }
     };
 
     if (!userInfo) {
       getUserData();
     } else {
-      setLoading(false);
+      // if user info is already present then set loading to false
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   }, [userInfo, setUserInfo]);
 
   if (loading) {
-    //Skeleton
-    return <div>Loading...</div>;
+    // Skeleton
+    return (
+      <div className="flex h-screen justify-center items-center">
+        <Lottie
+          isClickToPauseDisabled={true}
+          height={100}
+          width={100}
+          animationData={animationData}
+        />
+      </div>
+    );
   }
+
 
   return (
     <BrowserRouter>

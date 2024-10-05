@@ -7,7 +7,7 @@ import { AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { colorOptions, getShadowClass } from "@/lib/utils";
+import { colorOptions, getInitials, getShadowClass } from "@/lib/utils";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import {
@@ -25,7 +25,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState(null);
   const [selectedColor, setSelectedColor] = useState(colorOptions[0].value);
-  const fileInputRef = useRef(null);
+  // const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (userInfo.profileSetup) {
@@ -38,16 +38,7 @@ const Profile = () => {
     }
   }, [userInfo]);
 
-  const getInitials = () => {
-    if (firstName) {
-      return (
-        firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()
-      );
-    } else if (userInfo.email) {
-      return userInfo.email.charAt(0).toUpperCase();
-    }
-    return "X";
-  };
+  
 
   const validateProfile = () => {
     if (!firstName) {
@@ -69,9 +60,9 @@ const Profile = () => {
     }
   };
 
-  const handleFileInputClick = async () => {
-    fileInputRef.current.click(); // holds the reference to the file input element and triggers the click event
-  };
+  // const handleFileInputClick = async () => {
+  //   fileInputRef.current.click(); // holds the reference to the file input element and triggers the click event
+  // };
 
   const handleImageUpload = async (event) => {
     try {
@@ -98,8 +89,10 @@ const Profile = () => {
       });
       if (response.status === 200 && response.data.user) {
         console.log(response.data.user.image);
-        setUserInfo({ ...userInfo, image: response.data.user.image });
+        const newImage = response.data.user.image;
+        setUserInfo({ ...userInfo, image: newImage});
         console.log(userInfo);
+        setImage(`${HOST}/${newImage}`);
         toast.success("Profile image updated successfully");
       }
     } catch (error) {
@@ -171,12 +164,12 @@ const Profile = () => {
         <div className="space-y-6">
           <div className="flex flex-col items-center">
             <div className="relative w-32 h-32 mb-4">
-              <Avatar className="w-full h-full ring-2 ring-stone-400 drop-shadow-lg">
-                <AvatarImage src={image} alt="Profile" />
+              <Avatar className="w-full h-full ring-2 ring-stone-400 drop-shadow-lg ">
+                <AvatarImage src={image} alt="Profile" className="object-cover" />
                 <AvatarFallback
                   className={`text-4xl ${selectedColor} text-white`}
                 >
-                  {getInitials()}
+                  {getInitials(firstName, lastName, userInfo.email)}
                 </AvatarFallback>
               </Avatar>
             </div>
@@ -188,7 +181,7 @@ const Profile = () => {
                 type="file"
                 accept="image/*" // Accept only image files to be uploaded .png, .jpg, .jpeg
                 className="hidden"
-                ref={fileInputRef}
+                // ref={fileInputRef}
                 //onChange={handleFileInputClick} // When the file input changes, the handleFileInputClick function is called
                 onChange={handleImageUpload} // When the file input is clicked, the handleImageUpload function is called
               />

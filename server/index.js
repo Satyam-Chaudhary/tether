@@ -28,6 +28,8 @@ app.use("/api/auth", authRoutes)
 //   res.send("Hello World!");
 // });
 
+// console.log('Hello World!');
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
