@@ -28,8 +28,13 @@ export const getInitials = (firstName, lastName, email) => {
   return "X";
 };
 
-export const animationDefaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationData,
-};
+
+
+
+export const debounce = (func, delay) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  }
+}

@@ -42,6 +42,7 @@ export default function MessageBar() {
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onClick={() => setEmojiPickerOpen(false)}
               />
               <div className="relative">
                 <TooltipProvider>

@@ -6,10 +6,8 @@ import { Toaster } from './components/ui/sonner.jsx'
 
 
 createRoot(document.getElementById('root')).render(
-    <>
-   
+    <div className='light'>
     <App />
     <Toaster closeButton/>
-  
-    </>
+    </div>
 )

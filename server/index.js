@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes.js";
+import contactsRoutes from "./routes/ContactsRoutes.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(cookieParser()); // for parsing cookies
 app.use(express.json()); // for parsing application/json
 
 app.use("/api/auth", authRoutes)
+app.use("/api/contacts", contactsRoutes)
 
 // app.get("/", (req, res) => {
 //   res.send("Hello World!");
